@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bP6-Wl-SXK">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <scenes>
+        <!--打刻-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController title="打刻" id="BYZ-38-t0r" customClass="PunchViewController" customModule="iWorkerTimes" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="punch" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sv2-4H-6dq">
+                                <rect key="frame" x="181" y="253" width="238" height="93"/>
+                                <state key="normal" image="punchIn">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="punch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="geD-fQ-JmZ"/>
+                                </connections>
+                            </button>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" placeholderIntrinsicWidth="568" placeholderIntrinsicHeight="30" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="gye-Vd-30q">
+                                <rect key="frame" x="14" y="471" width="572" height="31"/>
+                            </slider>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="sv2-4H-6dq" secondAttribute="centerX" id="jhG-mm-pGt"/>
+                            <constraint firstAttribute="centerY" secondItem="sv2-4H-6dq" secondAttribute="centerY" id="jjR-KV-JtY"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="EdU-hv-j1r">
+                        <barButtonItem key="leftBarButtonItem" title="ヘルプ" id="d2d-FS-yqD">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" id="6jm-dg-KO2">
+                                <rect key="frame" x="-23" y="-15" width="133" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal">
+                                    <attributedString key="attributedTitle">
+                                        <fragment content="ヘルプ">
+                                            <attributes>
+                                                <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
+                                </state>
+                                <connections>
+                                    <segue destination="afv-Me-1fu" kind="modal" id="tkR-1T-TNw"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="設定" id="fYS-oG-aZR">
+                            <connections>
+                                <segue destination="D4T-u9-wia" kind="show" identifier="SettingTableViewSegue" id="F0Y-u6-Uh9"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="0PN-mg-Z8w" kind="show" identifier="WorkTableViewSegue" id="4NK-QG-eEu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1109" y="234"/>
+        </scene>
+        <!--勤怠一覧-->
+        <scene sceneID="SRG-2a-JV2">
+            <objects>
+                <tableViewController title="勤怠一覧" id="0PN-mg-Z8w" customClass="WorkTableViewController" customModule="iWorkerTimes" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ImP-0X-M4W">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="workTableCell" id="1jE-0N-eia">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1jE-0N-eia" id="sYf-dk-ui1">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="0PN-mg-Z8w" id="OV9-hV-YXl"/>
+                            <outlet property="delegate" destination="0PN-mg-Z8w" id="WPp-Dp-Tx0"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <segue destination="8RQ-GM-2nv" kind="show" identifier="DetailTableViewControllerSegue" id="RsP-C8-UC1"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lDH-uk-fBI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2009" y="-529"/>
+        </scene>
+        <!--設定-->
+        <scene sceneID="29K-Gr-UFy">
+            <objects>
+                <tableViewController title="設定" id="D4T-u9-wia" customClass="SettingTableViewController" customModule="iWorkerTimes" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="YDi-eT-e5U">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingTableCell" id="z9H-ti-tXC">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="z9H-ti-tXC" id="7FA-IM-1AD">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="D4T-u9-wia" id="hOD-ZL-dfo"/>
+                            <outlet property="delegate" destination="D4T-u9-wia" id="c4F-dd-cdz"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Yc0-G4-mnV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2009" y="182"/>
+        </scene>
+        <!--Help View Controller-->
+        <scene sceneID="qdX-jb-Bxp">
+            <objects>
+                <viewController id="afv-Me-1fu" customClass="HelpViewController" customModule="iWorkerTimes" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pOR-zi-GXF"/>
+                        <viewControllerLayoutGuide type="bottom" id="aBQ-bp-ZAF"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fhv-re-ncn">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="48y-mk-x50" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2009" y="827"/>
+        </scene>
+        <!--Detail Table View Controller-->
+        <scene sceneID="rvL-cw-qWg">
+            <objects>
+                <tableViewController id="8RQ-GM-2nv" customClass="DetailTableViewController" customModule="iWorkerTimes" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ook-0P-gph">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="datailTableCell" id="gGa-Mx-UFI">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gGa-Mx-UFI" id="XyE-if-OIb">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="8RQ-GM-2nv" id="4jx-co-QSp"/>
+                            <outlet property="delegate" destination="8RQ-GM-2nv" id="4Bu-pT-Od0"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qt0-MA-TLY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2784" y="-529"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="udF-HH-bSj">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bP6-Wl-SXK" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="UQ7-Vh-i88">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Vp5-A3-Ahk"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OJk-uf-upp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="364" y="234"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="punchIn" width="238" height="93"/>
+    </resources>
+</document>
