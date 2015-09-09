@@ -16,6 +16,8 @@
 		719FC4211B95579800872293 /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 719FC4201B95579800872293 /* images.xcassets */; };
 		71A120201B9ADEF800DA29C4 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A1201F1B9ADEF800DA29C4 /* HelpViewController.swift */; };
 		71A120221B9D2EBF00DA29C4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71A120211B9D2EBF00DA29C4 /* Alamofire.framework */; };
+		71A120291B9EE31500DA29C4 /* BWCircularSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A120281B9EE31500DA29C4 /* BWCircularSlider.swift */; };
+		71A1202B1B9EE67300DA29C4 /* BWCircularSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A1202A1B9EE67300DA29C4 /* BWCircularSliderView.swift */; };
 		71B6AFEF1B9436BE00F6DEC7 /* WorkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B6AFEE1B9436BE00F6DEC7 /* WorkTableViewController.swift */; };
 		71BECFF21B97F0FE00C3D31D /* NSDateISO8601.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BECFF11B97F0FE00C3D31D /* NSDateISO8601.swift */; };
 		71BECFF41B998E8600C3D31D /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BECFF31B998E8600C3D31D /* SettingTableViewController.swift */; };
@@ -48,6 +50,8 @@
 		719FC4201B95579800872293 /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		71A1201F1B9ADEF800DA29C4 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		71A120211B9D2EBF00DA29C4 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "Pods/../build/Debug-iphoneos/Alamofire.framework"; sourceTree = "<group>"; };
+		71A120281B9EE31500DA29C4 /* BWCircularSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BWCircularSlider.swift; sourceTree = "<group>"; };
+		71A1202A1B9EE67300DA29C4 /* BWCircularSliderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BWCircularSliderView.swift; sourceTree = "<group>"; };
 		71B6AFEE1B9436BE00F6DEC7 /* WorkTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkTableViewController.swift; sourceTree = "<group>"; };
 		71BECFF11B97F0FE00C3D31D /* NSDateISO8601.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateISO8601.swift; sourceTree = "<group>"; };
 		71BECFF31B998E8600C3D31D /* SettingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +108,8 @@
 				719FC41C1B9465AB00872293 /* DetailTableViewController.swift */,
 				71BECFF31B998E8600C3D31D /* SettingTableViewController.swift */,
 				71A1201F1B9ADEF800DA29C4 /* HelpViewController.swift */,
+				71A1202A1B9EE67300DA29C4 /* BWCircularSliderView.swift */,
+				71A120281B9EE31500DA29C4 /* BWCircularSlider.swift */,
 				71BECFF11B97F0FE00C3D31D /* NSDateISO8601.swift */,
 				718B12DB1B942C9F00AC32C3 /* LaunchScreen.xib */,
 				719FC4201B95579800872293 /* images.xcassets */,
@@ -307,7 +313,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				71A120201B9ADEF800DA29C4 /* HelpViewController.swift in Sources */,
+				71A1202B1B9EE67300DA29C4 /* BWCircularSliderView.swift in Sources */,
 				71BECFF41B998E8600C3D31D /* SettingTableViewController.swift in Sources */,
+				71A120291B9EE31500DA29C4 /* BWCircularSlider.swift in Sources */,
 				718B12D51B942C9F00AC32C3 /* PunchViewController.swift in Sources */,
 				71BECFF21B97F0FE00C3D31D /* NSDateISO8601.swift in Sources */,
 				719FC41D1B9465AB00872293 /* DetailTableViewController.swift in Sources */,

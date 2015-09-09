@@ -8,17 +8,18 @@
 
 import UIKit
 import SwiftyJSON
+import Foundation
 
 class DetailTableViewController: UITableViewController {
     
     // 画面遷移時に渡されるセル情報
-    var info = [String:AnyObject]()
+    var detailWorks = [String:AnyObject]()
 
     // Tableで使用する配列を定義する.
     private var myItems: NSArray?
     
     // Sectionで使用する配列を定義する.
-    private let mySections: NSArray = ["ユーザ名", "出勤時刻", "退勤時刻", "備考"]
+    private let mySections: NSArray = ["名前", "出勤時刻", "退勤時刻", "出勤時備考欄", "退勤時備考欄"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,14 +72,18 @@ class DetailTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("datailTableCell", forIndexPath: indexPath) as! UITableViewCell
         
+        println(NSDate.dateFromISOString((detailWorks["workIn"] as? String)!))
+        
         if indexPath.section == 0 {
-            cell.textLabel?.text = String(stringInterpolationSegment: info["userName"]!)
+            cell.textLabel?.text = detailWorks["userName"] as? String
         } else if indexPath.section == 1 {
-            cell.textLabel?.text = String(stringInterpolationSegment: info["workIn"]!)
+            cell.textLabel?.text = detailWorks["workIn"] as? String
         } else if indexPath.section == 2 {
-            cell.textLabel?.text = String(stringInterpolationSegment: info["workOut"]!)
+            cell.textLabel?.text = detailWorks["workOut"] as? String
         } else if indexPath.section == 3 {
-            cell.textLabel?.text = String(stringInterpolationSegment: info["comment"]!)
+            cell.textLabel?.text = detailWorks["workInComment"] as? String
+        } else if indexPath.section == 4 {
+            cell.textLabel?.text = detailWorks["workOutComment"] as? String
         }
 
         return cell

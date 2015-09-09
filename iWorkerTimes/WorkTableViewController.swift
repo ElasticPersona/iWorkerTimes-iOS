@@ -186,26 +186,29 @@ class WorkTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("workTableCell", forIndexPath: indexPath) as! UITableViewCell
         // セルの中身を設定
         let work = works[indexPath.row]
-        
+        println(work["workIn"])
         
         // タイムゾーンを言語設定にあわせる
-        var workIn: AnyObject = work["workIn"]!
-        var workOut: AnyObject = work["workOut"]!
-        
-        let formatter = NSDateFormatter()
-        formatter.locale = NSLocale(localeIdentifier: "ja_JP")
-        // formatter.dateFormat = "yyyy年MM月dd日 HH時mm分ss秒"
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        let iso8601Formatter = NSDateFormatter()
+        iso8601Formatter.locale = NSLocale(localeIdentifier: "ja_JP")
+        //iso8601Formatter.dateFormat = "yyyy年MM月dd日 HH時mm分ss秒.SSSZ"
+        iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         
         // 上記の形式の日付文字列を取得します
-        workIn = formatter.dateFromString(workIn as! String)!
-        workOut = formatter.dateFromString(workOut as! String)!
-    
-        var in_time: AnyObject = workIn
-        var out_time: AnyObject = workOut
+        var workIn = NSDate()
+        var workOut = NSDate()
         
-        cell.textLabel?.text = "\(in_time)" + "\(out_time)"
-        cell.detailTextLabel?.text = work["comment"] as? String
+        if (work["workIn"] != nil) {
+                workIn = iso8601Formatter.dateFromString(work["workIn"]! as! String)!
+        } else {
+        }
+        if (work["workOut"] != nil) {
+                workOut = iso8601Formatter.dateFromString(work["workOut"]! as! String)!
+        } else {
+        }
+        
+        cell.textLabel?.text = "\(workIn)" + "\(workOut)"
+        cell.detailTextLabel?.text = work["workInComment"] as? String
         
         return cell
     }
@@ -230,7 +233,7 @@ class WorkTableViewController: UITableViewController {
             // 遷移先のViewContollerにセルの情報を渡す
             let cellNum = sender as! Int
             let DetailVC : DetailTableViewController = segue.destinationViewController as! DetailTableViewController
-            DetailVC.info = self.works[cellNum] as [String:AnyObject]
+            DetailVC.detailWorks = self.works[cellNum] as [String:AnyObject]
         }
     }
     

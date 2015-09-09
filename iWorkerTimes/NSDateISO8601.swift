@@ -9,7 +9,7 @@
 import UIKit
 
 public extension NSDate {
-    public class func ISOStringFromDate(date: NSDate) -> String {
+    public class func ISOStringFromDate(date: NSDate?) -> String {
         //let dateFormatter = NSDateFormatter()
         //dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
         // dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
@@ -24,22 +24,22 @@ public extension NSDate {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         
         // 上記の形式の日付文字列を取得します
-        return dateFormatter.stringFromDate(date)
+        return dateFormatter.stringFromDate(date!)
     }
     
-    public class func dateFromISOString(string: String) -> NSDate {
+    public class func dateFromISOString(string: String?) -> NSDate {
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
         // dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        // dateFormatter.timeZone = NSTimeZone(name: "UTC")
         // dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
         
-        //dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss.SSSZ"
         
         // FullStyle
-        dateFormatter.timeStyle = .FullStyle
-        dateFormatter.dateStyle = .FullStyle
-        println(string)
+        //dateFormatter.timeStyle = .FullStyle
+        //dateFormatter.dateStyle = .FullStyle
         
-        return dateFormatter.dateFromString(string)!
+        return dateFormatter.dateFromString((string! as String))!
     }
 }
