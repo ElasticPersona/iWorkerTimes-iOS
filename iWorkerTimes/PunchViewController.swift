@@ -48,11 +48,13 @@ import SwiftyJSON
         //tumbImage?.resizableImageWithCapInsets(UIEdgeInsetsMake(100.0, 50.0, 100.0, 50.0))
         
         //左右枠画像の伸張設定
-        minImage?.stretchableImageWithLeftCapWidth(6, topCapHeight: 0)
-        maxImage?.stretchableImageWithLeftCapWidth(6, topCapHeight: 0)
+        let minInsets : UIEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0)
+        minImage = minImage!.resizableImageWithCapInsets(minInsets)
+        let maxInsets : UIEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 6)
+        maxImage = maxImage!.resizableImageWithCapInsets(maxInsets)
         
         //スライダーインスタンス生成
-        customSlider = UISlider(frame: CGRectMake(0, self.view.frame.height-100, self.view.frame.width, 100))
+        customSlider = UISlider(frame: CGRectMake(0, self.view.frame.height/1.4, self.view.frame.width, 100))
         
         //枠画像をスライダーへ登録（登録した時点で、スライダーのviewのwidthに合うように枠画像が伸張する模様）
         customSlider.setMinimumTrackImage(minImage, forState: .Normal)
