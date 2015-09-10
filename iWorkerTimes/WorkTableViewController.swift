@@ -186,28 +186,26 @@ class WorkTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("workTableCell", forIndexPath: indexPath) as! UITableViewCell
         // セルの中身を設定
         let work = works[indexPath.row]
-        println(work["workIn"])
         
-        // タイムゾーンを言語設定にあわせる
-        let iso8601Formatter = NSDateFormatter()
-        iso8601Formatter.locale = NSLocale(localeIdentifier: "ja_JP")
-        //iso8601Formatter.dateFormat = "yyyy年MM月dd日 HH時mm分ss秒.SSSZ"
-        iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        
-        // 上記の形式の日付文字列を取得します
-        var workIn = NSDate()
+        var workInString  : String? = work["workIn"] as? String
+        var workOutString : String? = work["workOut"] as? String
+        var workIn  = NSDate()
         var workOut = NSDate()
         
+        
+        
         if (work["workIn"] != nil) {
-                workIn = iso8601Formatter.dateFromString(work["workIn"]! as! String)!
+            workIn = NSDate.stringToDate(workInString!)
+            workInString = NSDate.dateToString(workIn)
         } else {
         }
         if (work["workOut"] != nil) {
-                workOut = iso8601Formatter.dateFromString(work["workOut"]! as! String)!
+            workOut = NSDate.stringToDate(workOutString!)
+            workOutString = NSDate.dateToString(workOut)
         } else {
         }
         
-        cell.textLabel?.text = "\(workIn)" + "\(workOut)"
+        cell.textLabel!.text = "\(workInString)" + "\(workOutString)"
         cell.detailTextLabel?.text = work["workInComment"] as? String
         
         return cell

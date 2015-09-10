@@ -9,37 +9,57 @@
 import UIKit
 
 public extension NSDate {
-    public class func ISOStringFromDate(date: NSDate?) -> String {
-        //let dateFormatter = NSDateFormatter()
-        //dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
-        // dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
-        //dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        
-        //return dateFormatter.stringFromDate(date).stringByAppendingString("Z")
-        
-        
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
-        // formatter.dateFormat = "yyyy年MM月dd日 HH時mm分ss秒"
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        
-        // 上記の形式の日付文字列を取得します
-        return dateFormatter.stringFromDate(date!)
-    }
     
-    public class func dateFromISOString(string: String?) -> NSDate {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
+    // NSDate から 文字列
+    public class func dateToString(nsDate: NSDate) -> String {
+        
+        let iso8601Formatter = NSDateFormatter()
+        iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        
+        let dateString = iso8601Formatter.stringFromDate(nsDate)
+
+        // dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
         // dateFormatter.timeZone = NSTimeZone.localTimeZone()
         // dateFormatter.timeZone = NSTimeZone(name: "UTC")
         // dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
         
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss.SSSZ"
+        
+        let date = iso8601Formatter.dateFromString(dateString)
         
         // FullStyle
         //dateFormatter.timeStyle = .FullStyle
         //dateFormatter.dateStyle = .FullStyle
         
-        return dateFormatter.dateFromString((string! as String))!
+        iso8601Formatter.locale = NSLocale(localeIdentifier: "ja")
+        //dateFormatter.timeZone = NSTimeZone(name: "UTC")
+        iso8601Formatter.dateFormat = "yyyy年MM月dd日 HH時mm分ss秒"
+        return iso8601Formatter.stringFromDate(date!)
+        
+    }
+    
+    // 文字列 から NSDate
+    public class func stringToDate(string: String) -> NSDate {
+        
+        let iso8601Formatter = NSDateFormatter()
+        iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        
+        let date = iso8601Formatter.dateFromString(string)
+
+        // dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
+        // dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        // dateFormatter.timeZone = NSTimeZone(name: "UTC")
+        // dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+        
+        //dateFormatter.dateFormat = "yyyy年MM月dd日 HH時mm分ss秒"
+        
+        
+        let dateString = iso8601Formatter.stringFromDate(date!)
+        
+        // FullStyle
+        //dateFormatter.timeStyle = .FullStyle
+        //dateFormatter.dateStyle = .FullStyle
+        
+        return iso8601Formatter.dateFromString(dateString)!
+        
     }
 }

@@ -24,9 +24,9 @@ class DetailTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.tableView.reloadData()
-        })
+        //dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        //    self.tableView.reloadData()
+        //})
         //addRefreshControl()
     }
     
@@ -72,14 +72,30 @@ class DetailTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("datailTableCell", forIndexPath: indexPath) as! UITableViewCell
         
-        println(NSDate.dateFromISOString((detailWorks["workIn"] as? String)!))
+        var workInString  : String? = detailWorks["workIn"] as? String
+        var workOutString : String? = detailWorks["workOut"] as? String
+        var workIn  = NSDate()
+        var workOut = NSDate()
+        
         
         if indexPath.section == 0 {
             cell.textLabel?.text = detailWorks["userName"] as? String
         } else if indexPath.section == 1 {
-            cell.textLabel?.text = detailWorks["workIn"] as? String
+            if workInString != nil {
+                workIn = NSDate.stringToDate(workInString!)
+                workInString = NSDate.dateToString(workIn)
+                cell.textLabel?.text = workInString
+            } else {
+                cell.textLabel?.text = ""
+            }
         } else if indexPath.section == 2 {
-            cell.textLabel?.text = detailWorks["workOut"] as? String
+            if workOutString != nil {
+                workOut = NSDate.stringToDate(workOutString!)
+                workOutString = NSDate.dateToString(workOut)
+                cell.textLabel?.text = workOutString
+            } else {
+                cell.textLabel?.text = ""
+            }
         } else if indexPath.section == 3 {
             cell.textLabel?.text = detailWorks["workInComment"] as? String
         } else if indexPath.section == 4 {

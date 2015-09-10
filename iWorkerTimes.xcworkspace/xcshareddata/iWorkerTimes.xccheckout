@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4719A0A2-9448-425F-B0E3-64F732BCFBA0</string>
+	<key>IDESourceControlProjectName</key>
+	<string>iWorkerTimes</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>30BDA8432C677E93ED4C93F10C2AA7641F36EC3F</key>
+		<string>https://github.com/ElasticPersona/iWorkerTimes-iOS.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>iWorkerTimes.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>30BDA8432C677E93ED4C93F10C2AA7641F36EC3F</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/ElasticPersona/iWorkerTimes-iOS.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>30BDA8432C677E93ED4C93F10C2AA7641F36EC3F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>30BDA8432C677E93ED4C93F10C2AA7641F36EC3F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>iWorkerTimes</string>
+		</dict>
+	</array>
+</dict>
+</plist>

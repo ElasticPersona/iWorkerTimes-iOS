@@ -13,6 +13,8 @@ import SwiftyJSON
 
 @IBDesignable class PunchViewController: UIViewController {
     
+    private let secondLayer = CAShapeLayer()
+    
     var works = [[String:AnyObject]]()
     var customSlider = UISlider()
     
@@ -28,6 +30,12 @@ import SwiftyJSON
         // 今日の打刻状況を取得する
         self.fetchTodayWorks()
         
+        // CADisplayLink生成
+        self.displayLinkCreate()
+        
+        // 現在時刻表示生成
+        self.nowTimeViewCreate()
+        
         // 打刻ボタン作成
         self.punchSliderCreate()
         
@@ -37,6 +45,93 @@ import SwiftyJSON
         self.view.addGestureRecognizer(pageSwipe)
     }
     
+    
+    // CADisplayLink生成
+    func displayLinkCreate() {
+        
+        // 円のレイヤー
+        let frame = view.frame
+        let path = UIBezierPath()
+        path.addArcWithCenter(
+            CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)),
+            radius: frame.width / 2.0 - 20.0,
+            startAngle: CGFloat(-M_PI_2),
+            endAngle: CGFloat(M_PI + M_PI_2),
+            clockwise: true)
+        secondLayer.path = path.CGPath
+        secondLayer.strokeColor = UIColor.blackColor().CGColor
+        secondLayer.fillColor = UIColor.clearColor().CGColor
+        secondLayer.speed = 0.0     // ※1
+        view.layer.addSublayer(secondLayer)
+        
+        // 円を描くアニメーション
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        animation.fromValue = 0.0
+        animation.toValue = 1.0
+        animation.duration = 60.0
+        secondLayer.addAnimation(animation, forKey: "strokeCircle")
+        
+        // CADisplayLink設定
+        let displayLink = CADisplayLink(target: self, selector: Selector("update:"))
+        displayLink.frameInterval = 1   // ※2
+        displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSRunLoopCommonModes)
+        
+    }
+    func update(displayLink: CADisplayLink) {
+        // timeOffsetに現在時刻の秒数を設定
+        let time = NSDate().timeIntervalSince1970
+        let seconds = floor(time) % 60
+        let milliseconds = time - floor(time)
+        secondLayer.timeOffset = seconds + milliseconds   // ※3
+    }
+    
+    // 現在時刻表示
+    func nowTimeViewCreate() {
+        //現在時刻を取得.
+        let myDate: NSDate = NSDate()
+        
+        //カレンダーを取得.
+        let myCalendar: NSCalendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
+        
+        //取得するコンポーネントを決める.
+        let myComponetns = myCalendar.components(NSCalendarUnit.CalendarUnitYear   |
+            NSCalendarUnit.CalendarUnitMonth  |
+            NSCalendarUnit.CalendarUnitDay    |
+            NSCalendarUnit.CalendarUnitHour   |
+            NSCalendarUnit.CalendarUnitMinute |
+            NSCalendarUnit.CalendarUnitSecond |
+            NSCalendarUnit.CalendarUnitWeekday,
+            fromDate: myDate)
+        
+        let weekdayStrings: Array = ["nil","日","月","火","水","木","金","土","日"]
+        
+        println("year: \(myComponetns.year)")
+        println("month: \(myComponetns.month)")
+        println("day: \(myComponetns.day)")
+        println("hour: \(myComponetns.hour)")
+        println("minute: \(myComponetns.minute)")
+        println("second: \(myComponetns.second)")
+        println("weekday: \(weekdayStrings[myComponetns.weekday])")
+        
+        //現在時間表示用のラベルを生成.
+        let myLabel: UILabel = UILabel()
+        myLabel.font = UIFont(name: "HiraKakuInterface-W1", size:UIFont.labelFontSize())
+        
+        var myStr: String = "\(myComponetns.year)年"
+        myStr += "\(myComponetns.month)月"
+        myStr += "\(myComponetns.day)日["
+        myStr += "\(weekdayStrings[myComponetns.weekday])]"
+        myStr += "\(myComponetns.hour)時"
+        myStr += "\(myComponetns.minute)分"
+        myStr += "\(myComponetns.second)秒"
+        
+        myLabel.text = myStr
+        myLabel.frame = CGRect(x: 0, y: self.view.bounds.height/2, width: self.view.bounds.width, height: 20)
+        myLabel.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(myLabel)
+    }
+    
+    // 打刻カスタムスライダー生成
     func punchSliderCreate() {
         
         //枠画像(14×50)の取得
@@ -54,7 +149,7 @@ import SwiftyJSON
         maxImage = maxImage!.resizableImageWithCapInsets(maxInsets)
         
         //スライダーインスタンス生成
-        customSlider = UISlider(frame: CGRectMake(0, self.view.frame.height/1.4, self.view.frame.width, 100))
+        customSlider = UISlider(frame: CGRectMake(0, self.view.frame.height/1.2, self.view.frame.width, 100))
         
         //枠画像をスライダーへ登録（登録した時点で、スライダーのviewのwidthに合うように枠画像が伸張する模様）
         customSlider.setMinimumTrackImage(minImage, forState: .Normal)
@@ -69,7 +164,7 @@ import SwiftyJSON
         customSlider.continuous = true
         
         //スライダー初期値
-        customSlider.value = 0.0
+        customSlider.value = 3.0
         
         //値の変化時のアクション
         customSlider.addTarget(self, action: "punchSlider:", forControlEvents: UIControlEvents.ValueChanged)
@@ -101,7 +196,7 @@ import SwiftyJSON
     
     func punchSliderStop(slider: UISlider) {
         println("離したね")
-        self.customSlider.value = 0.0
+        self.customSlider.value = 3.0
     }
     
     /*
