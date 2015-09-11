@@ -17,6 +17,8 @@ import SwiftyJSON
     
     var works = [[String:AnyObject]]()
     var customSlider = UISlider()
+    let punchStatus = ["in": 0, "out": 1, "fin": 2]
+    var nowStatus = 0
     
     // 打刻ボタンでリクエストを送るURL
     let urlPostString = "http://52.68.68.148:3000/work"
@@ -27,19 +29,20 @@ import SwiftyJSON
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        // 今日の打刻状況を取得する
-        self.fetchTodayWorks()
-        
         // CADisplayLink生成
         self.displayLinkCreate()
         
         // 現在時刻表示生成
-        self.nowTimeViewCreate()
+        var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("nowTimeViewCreate"), userInfo: nil, repeats: true);
+        //self.nowTimeViewCreate()
         
         // 打刻ボタン作成
         self.punchSliderCreate()
         
-        // スワイプ認識.
+        // 今日の打刻状況を取得
+        self.fetchTodayWorks()
+        
+        // スワイプ認識
         let pageSwipe = UISwipeGestureRecognizer(target: self, action: "swipeGesture:")
         pageSwipe.direction = UISwipeGestureRecognizerDirection.Left
         self.view.addGestureRecognizer(pageSwipe)
@@ -87,6 +90,7 @@ import SwiftyJSON
     
     // 現在時刻表示
     func nowTimeViewCreate() {
+        
         //現在時刻を取得.
         let myDate: NSDate = NSDate()
         
@@ -114,8 +118,8 @@ import SwiftyJSON
         println("weekday: \(weekdayStrings[myComponetns.weekday])")
         
         //現在時間表示用のラベルを生成.
-        let myLabel: UILabel = UILabel()
-        myLabel.font = UIFont(name: "HiraKakuInterface-W1", size:UIFont.labelFontSize())
+        var timeLabel: UILabel = UILabel()
+        timeLabel.font = UIFont(name: "HiraKakuInterface-W1", size:UIFont.labelFontSize())
         
         var myStr: String = "\(myComponetns.year)年"
         myStr += "\(myComponetns.month)月"
@@ -125,27 +129,31 @@ import SwiftyJSON
         myStr += "\(myComponetns.minute)分"
         myStr += "\(myComponetns.second)秒"
         
-        myLabel.text = myStr
-        myLabel.frame = CGRect(x: 0, y: self.view.bounds.height/2, width: self.view.bounds.width, height: 20)
-        myLabel.textAlignment = NSTextAlignment.Center
-        self.view.addSubview(myLabel)
+        timeLabel.text = myStr
+        timeLabel.frame = CGRect(x: 0, y: self.view.bounds.height/2, width: self.view.bounds.width, height: 20)
+        timeLabel.textAlignment = NSTextAlignment.Center
+        
+        self.view.viewWithTag(1)?.removeFromSuperview()
+        
+        timeLabel.tag = 1
+        self.view.addSubview(timeLabel)
     }
     
     // 打刻カスタムスライダー生成
     func punchSliderCreate() {
         
         //枠画像(14×50)の取得
-        var minImage = UIImage(named: "sliderL.png")
-        var maxImage = UIImage(named: "sliderR.png")
+        var minImage = UIImage(named: "sliderL2.png")
+        var maxImage = UIImage(named: "sliderR2.png")
         
         //ツマミ画像(50×50 余白を左右に10px加えたもの)
-        var tumbImage = UIImage(named: "punchSlider.jpg")
+        //var tumbImage = UIImage(named: "punchInSlider.jpg")
         //tumbImage?.resizableImageWithCapInsets(UIEdgeInsetsMake(100.0, 50.0, 100.0, 50.0))
         
         //左右枠画像の伸張設定
-        let minInsets : UIEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0)
+        let minInsets : UIEdgeInsets = UIEdgeInsetsMake(0, 8, 0, 0)
         minImage = minImage!.resizableImageWithCapInsets(minInsets)
-        let maxInsets : UIEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 6)
+        let maxInsets : UIEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 8)
         maxImage = maxImage!.resizableImageWithCapInsets(maxInsets)
         
         //スライダーインスタンス生成
@@ -156,7 +164,7 @@ import SwiftyJSON
         customSlider.setMaximumTrackImage(maxImage, forState: .Normal)
         
         //ツマミ画像をスライダーへ登録
-        customSlider.setThumbImage(tumbImage, forState: .Normal)
+        //customSlider.setThumbImage(tumbImage, forState: .Normal)
         
         //各種値設定
         customSlider.minimumValue = 0.0
@@ -267,31 +275,47 @@ import SwiftyJSON
         }
     }
     
+    // 打刻処理
     func toPunch() {
         
-        // ユーザ名を付加させてリクエストを送る
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let userName = defaults.stringForKey("userName")
-        let params = [
-            "userName" : userName!,
-            "comment" : "備考"
-        ]
+        let alert = UIAlertView()
         
-        request(.POST, urlPostString, parameters: params, encoding: .JSON)
-            .responseJSON {
-                (request, response, data, error) -> Void in
+        println(self.nowStatus)
+        println((punchStatus["fin"]!))
+        
+        if self.nowStatus != punchStatus["fin"]! {
+            
+            // ユーザ名を付加させてリクエストを送る
+            let defaults = NSUserDefaults.standardUserDefaults()
+            let userName = defaults.stringForKey("userName")
+            let params = [
+                "userName" : userName!,
+                "comment" : "備考"
+            ]
+        
+            request(.POST, urlPostString, parameters: params, encoding: .JSON)
+                .responseJSON {
+                    (request, response, data, error) -> Void in
                 
+            }
+            
+            // 打刻後に出すメッセージを作成
+            alert.title = "メッセージ"
+            alert.message = "打刻しました。"
+            
+        } else {
+            
+            alert.title = "メッセージ"
+            alert.message = "本日は打刻済みです。お疲れ様でした。"
+            
         }
         
-        let alert = UIAlertView()
-        alert.title = "メッセージ"
-        alert.message = "打刻しました。"
         alert.addButtonWithTitle("OK")
         alert.show()
-        println("打刻しました。")
         
     }
     
+    // 今日の打刻状況を取得
     func fetchTodayWorks() {
         
         // ユーザ名を付加させてリクエストを送る
@@ -312,20 +336,23 @@ import SwiftyJSON
                     
                     //今日の打刻チェック
                     if (workIn == nil && workOut == nil) {
-                        //出社打刻
-                        println("出社打刻タイミング")
+                        //出社打刻（イメージ変更）
+                        self.nowStatus = self.punchStatus["in"]!
+                        var punchInImage = UIImage(named: "punchInSlider.jpg")
+                        self.customSlider.setThumbImage(punchInImage, forState: .Normal)
+                        
                     } else if (workIn != nil && workOut == nil) {
-                        //退勤打刻
-                        println("退勤打刻タイミング")
+                        //退勤打刻（イメージ変更）
+                        self.nowStatus = self.punchStatus["out"]!
+                        var punchOutImage = UIImage(named: "punchOutSlider.jpg")
+                        self.customSlider.setThumbImage(punchOutImage, forState: .Normal)
+                        
                     } else {
-                        //打刻ボタン操作不可処理
-                        println("打刻操作不可タイミング")
+                        //打刻ボタン操作不可（イメージ変更）
+                        self.nowStatus = self.punchStatus["fin"]!
+                        var punchFinImage = UIImage(named: "punchFinSlider.jpg")
+                        self.customSlider.setThumbImage(punchFinImage, forState: .Normal)
                     }
-                    
-                    //打刻ボタンイメージの変更
-                    let image = UIImage(named: "punchOut")!
-                    let imageButton = UIButton()
-                    imageButton.setImage(image, forState: .Normal)
                     
                 }
         }
