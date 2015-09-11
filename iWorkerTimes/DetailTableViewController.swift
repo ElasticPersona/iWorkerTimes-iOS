@@ -11,9 +11,9 @@ import SwiftyJSON
 import Foundation
 
 class DetailTableViewController: UITableViewController {
-    
+
     // 画面遷移時に渡されるセル情報
-    var detailWorks = [String:AnyObject]()
+    var detailWorks = Work()
 
     // Tableで使用する配列を定義する.
     private var myItems: NSArray?
@@ -72,18 +72,19 @@ class DetailTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("datailTableCell", forIndexPath: indexPath) as! UITableViewCell
         
-        var workInString  : String? = detailWorks["workIn"] as? String
-        var workOutString : String? = detailWorks["workOut"] as? String
+        var workInString   = detailWorks.workIn
+        var workOutString  = detailWorks.workOut
         var workIn  = NSDate()
         var workOut = NSDate()
         
+        let dateFormat = "yyyy年MM月dd日 HH時mm分ss秒"
         
         if indexPath.section == 0 {
-            cell.textLabel?.text = detailWorks["userName"] as? String
+            cell.textLabel?.text = detailWorks.userName
         } else if indexPath.section == 1 {
             if workInString != nil {
                 workIn = NSDate.stringToDate(workInString!)
-                workInString = NSDate.dateToString(workIn)
+                workInString = NSDate.dateToString(workIn, nsFormat: dateFormat)
                 cell.textLabel?.text = workInString
             } else {
                 cell.textLabel?.text = ""
@@ -91,15 +92,15 @@ class DetailTableViewController: UITableViewController {
         } else if indexPath.section == 2 {
             if workOutString != nil {
                 workOut = NSDate.stringToDate(workOutString!)
-                workOutString = NSDate.dateToString(workOut)
+                workOutString = NSDate.dateToString(workOut, nsFormat: dateFormat)
                 cell.textLabel?.text = workOutString
             } else {
                 cell.textLabel?.text = ""
             }
         } else if indexPath.section == 3 {
-            cell.textLabel?.text = detailWorks["workInComment"] as? String
+            cell.textLabel?.text = detailWorks.workInComment
         } else if indexPath.section == 4 {
-            cell.textLabel?.text = detailWorks["workOutComment"] as? String
+            cell.textLabel?.text = detailWorks.workOutComment
         }
 
         return cell

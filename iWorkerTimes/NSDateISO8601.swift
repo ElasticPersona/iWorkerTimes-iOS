@@ -11,7 +11,7 @@ import UIKit
 public extension NSDate {
     
     // NSDate から 文字列
-    public class func dateToString(nsDate: NSDate) -> String {
+    public class func dateToString(nsDate: NSDate, nsFormat: String) -> String {
         
         let iso8601Formatter = NSDateFormatter()
         iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
@@ -32,7 +32,8 @@ public extension NSDate {
         
         iso8601Formatter.locale = NSLocale(localeIdentifier: "ja")
         //dateFormatter.timeZone = NSTimeZone(name: "UTC")
-        iso8601Formatter.dateFormat = "yyyy年MM月dd日 HH時mm分ss秒"
+        iso8601Formatter.dateFormat = nsFormat
+        //iso8601Formatter.dateFormat = "yyyy年MM月dd日 HH時mm分ss秒"
         return iso8601Formatter.stringFromDate(date!)
         
     }

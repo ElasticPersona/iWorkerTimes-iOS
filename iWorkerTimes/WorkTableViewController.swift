@@ -20,12 +20,10 @@ class WorkTableViewController: UITableViewController {
     
     // 取得するAPI
     //let urlString = "http://api.openweathermap.org/data/2.5/forecast?units=metric&q=Tokyo"
-    let urlString = "http://52.68.68.148:3000"
+    let urlString = "http://52.68.68.148:3000/work"
     
     // セルの中身
-    var works = [[String:AnyObject]]()
-    var cellItems = NSMutableArray() //TODO Del
-    var cellInfo = [[String:JSON]]() //TODO Del
+    var works = [Work]()
     
     // ロード中かどうか
     var isInLoad = false
@@ -39,9 +37,8 @@ class WorkTableViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        // json取得->tableに突っ込む
+        // json取得->tableへ
         self.fetchWorks()
-        //makeTableData()
         
         // プルダウンでリロード機能
         addRefreshControl()
@@ -62,98 +59,48 @@ class WorkTableViewController: UITableViewController {
     // リロード時の処理
     func pullToRefresh() {
         
-        // tableに突っ込む用のデータを作成
-        //makeTableData()
+        // tableに表示するデータを作成
+        self.works.removeAll()
         self.fetchWorks()
         
-        // 再度tableに情報を突っ込む
+        // table情報を更新
         self.tableView.reloadData()
         self.index++
         println("refresh: \(self.index)")
     }
     
     
-    // json取得->tableに突っ込む
-    func makeTableData() {
-        self.isInLoad = true
-        var url = NSURL(string: self.urlString)!
-        var task = NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: {data, response, error in
-            // リソースの取得が終わると、ここに書いた処理が実行される
-            var json = JSON(data: data)
-            
-            // 各セルに情報を突っ込む
-            for var i = 0; i < self.cellNum; i++ {
-                var name = json[i]["name"]
-                var in_time = json[i]["in"]
-                var out_time = json[i]["out"]
-                
-                var info = "\(in_time), \(out_time)"
-                self.cellItems[i] = info
-            }
-            
-            for (key: String, value: JSON) in json {
-                var cellJson = [
-                    "name" : value["name"],
-                    "in" : value["in"],
-                    "out" : value["out"],
-                    "comment" : value["comment"]
-                ]
-                //println(cellJson)
-                self.cellInfo.append(cellJson)
-            }
-            // ロードが完了したので、falseに
-            self.isInLoad = false
-        })
-        task.resume()
-        
-        // 読み込みが終わるまで待機
-        // (ゆる募)
-        // 下の解決策以外に何か方法があればと。。。
-        // jsonの取得に非同期通信を使ってるので、読み込むまで待ってからじゃないと
-        // cellに値が入らない。同期通信使えって話もあるけど今後の拡張を考えてNSURLSession使ってます(^_^;)
-        while isInLoad {
-            usleep(10)
-            index++
-            // println("load\(index)")
-        }
-        // ロードが終わったことを通知
-        refreshControl?.endRefreshing()
-    }
-    
+    // json取得->TableViewへ
     func fetchWorks() {
         self.isInLoad = true
         
-        let url = NSURL(string: urlString)
         
-        let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        let dataTask = session.dataTaskWithURL(url!, completionHandler: { (data, response, error) -> Void in
+        // ユーザ名を付加させてリクエストを送る
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let userName = defaults.stringForKey("userName")
+        let params = [
+            "userName" : userName!
+        ]
+        
+        request(.POST, urlString, parameters: params, encoding: .JSON)
+            .responseJSON {
+                (_, _, resJson, error) -> Void in
+                if let workParamArray = resJson!["results"] as? Array<Dictionary<String,AnyObject>> {
+                    for workParam in workParamArray {
+                        let work = Work()
+                            work.userName        = workParam["userName"] as? String
+                            work.workIn          = workParam["workIn"] as? String
+                            work.workOut         = workParam["workOut"] as? String
+                            work.workInComment   = workParam["workInComment"] as? String
+                            work.workOutComment  = workParam["workOutComment"] as? String
 
-            if (error == nil) {
-                let json = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: nil) as! [String:AnyObject]
-                
-                let results = json["results"] as! [[String:AnyObject]]
-                
-                self.works = results
-                
-                dispatch_async(dispatch_get_main_queue()) {
+                        self.works.append(work)
+                    }
                     self.tableView.reloadData()
                 }
-            }
-            // ロードが完了したので、falseに
-            self.isInLoad = false
-        })
-        dataTask.resume()
-        
-        // 読み込みが終わるまで待機
-        // (ゆる募)
-        // 下の解決策以外に何か方法があればと。。。
-        // jsonの取得に非同期通信を使ってるので、読み込むまで待ってからじゃないと
-        // cellに値が入らない。同期通信使えって話もあるけど今後の拡張を考えてNSURLSession使ってます(^_^;)
-        //while isInLoad {
-        //    usleep(10)
-        //    index++
-            // println("load\(index)")
-        //}
+                // ロードが完了したので、falseに
+                self.isInLoad = false
+        }
         // ロードが終わったことを通知
         refreshControl?.endRefreshing()
         
@@ -183,30 +130,32 @@ class WorkTableViewController: UITableViewController {
     
     // セルの中身を設定
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("workTableCell", forIndexPath: indexPath) as! UITableViewCell
         // セルの中身を設定
         let work = works[indexPath.row]
         
-        var workInString  : String? = work["workIn"] as? String
-        var workOutString : String? = work["workOut"] as? String
+        var workInString  : String? = work.workIn
+        var workOutString : String? = work.workOut
         var workIn  = NSDate()
         var workOut = NSDate()
         
+        let dateFormat = "yyyy年MM月dd日"
         
-        
-        if (work["workIn"] != nil) {
+        if (workInString != nil) {
             workIn = NSDate.stringToDate(workInString!)
-            workInString = NSDate.dateToString(workIn)
-        } else {
+            workInString = NSDate.dateToString(workIn, nsFormat: dateFormat)
         }
-        if (work["workOut"] != nil) {
+        if (workOutString != nil) {
             workOut = NSDate.stringToDate(workOutString!)
-            workOutString = NSDate.dateToString(workOut)
-        } else {
+            workOutString = NSDate.dateToString(workOut, nsFormat: dateFormat)
         }
         
-        cell.textLabel!.text = "\(workInString)" + "\(workOutString)"
-        cell.detailTextLabel?.text = work["workInComment"] as? String
+        var cellText = workInString!
+        if workInString != nil { cellText += "【出勤済】" }
+        if workOutString != nil { cellText += "【退勤済】" }
+
+        cell.textLabel!.text = cellText
         
         return cell
     }
@@ -227,11 +176,10 @@ class WorkTableViewController: UITableViewController {
         
         if (segue.identifier == "DetailTableViewControllerSegue") {
             
-            
             // 遷移先のViewContollerにセルの情報を渡す
             let cellNum = sender as! Int
             let DetailVC : DetailTableViewController = segue.destinationViewController as! DetailTableViewController
-            DetailVC.detailWorks = self.works[cellNum] as [String:AnyObject]
+            DetailVC.detailWorks = self.works[cellNum] as AnyObject as! Work
         }
     }
     

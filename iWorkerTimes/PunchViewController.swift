@@ -305,9 +305,10 @@ import SwiftyJSON
             .responseJSON {
                 (_, _, resJson, error) -> Void in
                 if (error == nil) {
-                    let data = JSON(resJson!)
-                    var workIn = data["results"][0]["workIn"]
-                    var workOut = data["results"][0]["workOut"]
+                    let results = JSON(resJson!)
+                    let data = results["results"][0]
+                    var workIn = data["workIn"]
+                    var workOut = data["workOut"]
                     
                     //今日の打刻チェック
                     if (workIn == nil && workOut == nil) {

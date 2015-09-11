@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		716131B71BA27B1B009F34C3 /* Work.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716131B61BA27B1B009F34C3 /* Work.swift */; };
 		718B12D31B942C9F00AC32C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718B12D21B942C9F00AC32C3 /* AppDelegate.swift */; };
 		718B12D51B942C9F00AC32C3 /* PunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718B12D41B942C9F00AC32C3 /* PunchViewController.swift */; };
 		718B12D81B942C9F00AC32C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 718B12D61B942C9F00AC32C3 /* Main.storyboard */; };
@@ -37,6 +38,7 @@
 /* Begin PBXFileReference section */
 		06D0CAA0B1BCBC67E6128426 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		4C63DE50775B4E079ACA8232 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		716131B61BA27B1B009F34C3 /* Work.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Work.swift; sourceTree = "<group>"; };
 		718B12CD1B942C9F00AC32C3 /* iWorkerTimes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iWorkerTimes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718B12D11B942C9F00AC32C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		718B12D21B942C9F00AC32C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				718B12D21B942C9F00AC32C3 /* AppDelegate.swift */,
 				718B12D41B942C9F00AC32C3 /* PunchViewController.swift */,
 				71B6AFEE1B9436BE00F6DEC7 /* WorkTableViewController.swift */,
+				716131B61BA27B1B009F34C3 /* Work.swift */,
 				719FC41C1B9465AB00872293 /* DetailTableViewController.swift */,
 				71BECFF31B998E8600C3D31D /* SettingTableViewController.swift */,
 				71A1201F1B9ADEF800DA29C4 /* HelpViewController.swift */,
@@ -314,6 +317,7 @@
 			files = (
 				71A120201B9ADEF800DA29C4 /* HelpViewController.swift in Sources */,
 				71A1202B1B9EE67300DA29C4 /* BWCircularSliderView.swift in Sources */,
+				716131B71BA27B1B009F34C3 /* Work.swift in Sources */,
 				71BECFF41B998E8600C3D31D /* SettingTableViewController.swift in Sources */,
 				71A120291B9EE31500DA29C4 /* BWCircularSlider.swift in Sources */,
 				718B12D51B942C9F00AC32C3 /* PunchViewController.swift in Sources */,
