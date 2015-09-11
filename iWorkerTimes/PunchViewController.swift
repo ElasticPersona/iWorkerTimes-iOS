@@ -11,12 +11,14 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-@IBDesignable class PunchViewController: UIViewController {
+@IBDesignable class PunchViewController: UIViewController, UITextFieldDelegate {
     
     private let secondLayer = CAShapeLayer()
+    private var punchCommentField: UITextField!
     
     var works = [[String:AnyObject]]()
     var customSlider = UISlider()
+    var punchComment = ""
     let punchStatus = ["in": 0, "out": 1, "fin": 2]
     var nowStatus = 0
     
@@ -34,10 +36,12 @@ import SwiftyJSON
         
         // 現在時刻表示生成
         var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("nowTimeViewCreate"), userInfo: nil, repeats: true);
-        //self.nowTimeViewCreate()
         
-        // 打刻ボタン作成
+        // 打刻ボタン生成
         self.punchSliderCreate()
+        
+        // 備考欄生成
+        self.inputCommentCreate()
         
         // 今日の打刻状況を取得
         self.fetchTodayWorks()
@@ -47,6 +51,56 @@ import SwiftyJSON
         pageSwipe.direction = UISwipeGestureRecognizerDirection.Left
         self.view.addGestureRecognizer(pageSwipe)
     }
+    
+    // 備考欄の生成
+    func inputCommentCreate() {
+        
+        // UITextFieldを作成する.
+        punchCommentField = UITextField(frame: CGRectMake(0,0,self.view.bounds.width,30))
+        
+        // 表示する文字を代入する.
+        punchCommentField.text = ""
+        punchCommentField.placeholder = "備考"
+        
+        // Delegateを設定する.
+        punchCommentField.delegate = self
+        
+        // 枠を表示する.
+        punchCommentField.borderStyle = UITextBorderStyle.RoundedRect
+        
+        // UITextFieldの表示する位置を設定する.
+        punchCommentField.layer.position = CGPoint(x:self.view.bounds.width/2, y:self.view.bounds.height/1.05);
+        
+        // Viewに追加する.
+        self.view.addSubview(punchCommentField)
+        
+    }
+    
+    /*
+    UITextFieldが編集された直後に呼ばれるデリゲートメソッド.
+    */
+    func textFieldDidBeginEditing(textField: UITextField){
+        self.punchComment = textField.text
+    }
+    
+    /*
+    UITextFieldが編集終了する直前に呼ばれるデリゲートメソッド.
+    */
+    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+        self.punchComment = textField.text
+        
+        return true
+    }
+    
+    /*
+    改行ボタンが押された際に呼ばれるデリゲートメソッド.
+    */
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.punchComment = textField.text
+        
+        return true
+    }
+    
     
     
     // CADisplayLink生成
@@ -109,6 +163,7 @@ import SwiftyJSON
         
         let weekdayStrings: Array = ["nil","日","月","火","水","木","金","土","日"]
         
+        /*
         println("year: \(myComponetns.year)")
         println("month: \(myComponetns.month)")
         println("day: \(myComponetns.day)")
@@ -116,6 +171,7 @@ import SwiftyJSON
         println("minute: \(myComponetns.minute)")
         println("second: \(myComponetns.second)")
         println("weekday: \(weekdayStrings[myComponetns.weekday])")
+        */
         
         //現在時間表示用のラベルを生成.
         var timeLabel: UILabel = UILabel()
@@ -157,7 +213,7 @@ import SwiftyJSON
         maxImage = maxImage!.resizableImageWithCapInsets(maxInsets)
         
         //スライダーインスタンス生成
-        customSlider = UISlider(frame: CGRectMake(0, self.view.frame.height/1.2, self.view.frame.width, 100))
+        customSlider = UISlider(frame: CGRectMake(0, self.view.frame.height/1.3, self.view.frame.width, 100))
         
         //枠画像をスライダーへ登録（登録した時点で、スライダーのviewのwidthに合うように枠画像が伸張する模様）
         customSlider.setMinimumTrackImage(minImage, forState: .Normal)
@@ -280,17 +336,15 @@ import SwiftyJSON
         
         let alert = UIAlertView()
         
-        println(self.nowStatus)
-        println((punchStatus["fin"]!))
-        
         if self.nowStatus != punchStatus["fin"]! {
             
             // ユーザ名を付加させてリクエストを送る
             let defaults = NSUserDefaults.standardUserDefaults()
             let userName = defaults.stringForKey("userName")
+            let comment = self.punchComment
             let params = [
                 "userName" : userName!,
-                "comment" : "備考"
+                "comment" : comment
             ]
         
             request(.POST, urlPostString, parameters: params, encoding: .JSON)
@@ -300,18 +354,23 @@ import SwiftyJSON
             }
             
             // 打刻後に出すメッセージを作成
-            alert.title = "メッセージ"
-            alert.message = "打刻しました。"
+            alert.title = "打刻しました。"
+            alert.message = NSDate.dateToString(NSDate(), nsFormat: "yyyy年MM月dd日 HH時mm分") + comment
+            self.punchComment = ""
             
         } else {
             
-            alert.title = "メッセージ"
-            alert.message = "本日は打刻済みです。お疲れ様でした。"
+            alert.title = "本日は打刻済みです。お疲れ様でした。"
+            alert.message = NSDate.dateToString(NSDate(), nsFormat: "yyyy年MM月dd日 HH時mm分")
+            self.punchComment = ""
             
         }
         
         alert.addButtonWithTitle("OK")
         alert.show()
+        
+        loadView()
+        viewDidLoad()
         
     }
     
