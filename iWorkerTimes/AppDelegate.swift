@@ -27,6 +27,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders = ["Authorization": "Basic " + base64String!]
         
+        // ユーザのpush通知許可をもらうための設定
+        application.registerUserNotificationSettings(
+            UIUserNotificationSettings(forTypes:
+                UIUserNotificationType.Sound
+              | UIUserNotificationType.Badge
+              | UIUserNotificationType.Alert, categories: nil
+            )
+        )
+        
+        // アプリを終了していた際に、通知からの復帰をチェック
+        if let notification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
+            localPushRecieve(application, notification: notification)
+        }
+        // バッジをリセット
+        application.applicationIconBadgeNumber = 0
+        
         return true
     }
 
@@ -38,6 +54,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        
+        // push通知設定
+        // 登録済みのスケジュールをすべてリセット
+        application.cancelAllLocalNotifications()
+        
+        var notification = UILocalNotification()
+        notification.alertAction = "アプリに戻る"
+        // push通知メッセージ
+        notification.alertBody = "定時になりました"
+        // 通知する日時を設定
+        notification.fireDate = Util.nextFireDate()
+        notification.soundName = UILocalNotificationDefaultSoundName
+        // アイコンバッジに1を表示
+        notification.applicationIconBadgeNumber = 1
+        // あとのためにIdを割り振っておく
+        notification.userInfo = ["notifyId": "punch_update"]
+        application.scheduleLocalNotification(notification)
+        
+    }
+    
+    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+        // アプリがActiveな状態で通知を発生させた場合にも呼ばれるのでActiveでない場合のみ実行するように
+        if application.applicationState != .Active {
+            localPushRecieve(application, notification: notification)
+        }
+    }
+    
+    func localPushRecieve(application: UIApplication, notification: UILocalNotification) {
+        if let userInfo = notification.userInfo {
+            switch userInfo["notifyId"] as? String {
+            case .Some("push_update"):
+                reloadFromPush()
+                break
+            default:
+                break
+            }
+            // バッジをリセット
+            application.applicationIconBadgeNumber = 0
+            // 通知領域からこの通知を削除
+            application.cancelLocalNotification(notification)
+        }
+    }
+    
+    func reloadFromPush() {
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let punchViewController = mainStoryboard.instantiateViewControllerWithIdentifier("PunchViewController") as! PunchViewController
+        
+        // punchViewController.setupLinks(forceReload: true)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {

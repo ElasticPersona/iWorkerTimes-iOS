@@ -19,6 +19,8 @@
 		71A120221B9D2EBF00DA29C4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71A120211B9D2EBF00DA29C4 /* Alamofire.framework */; };
 		71A120291B9EE31500DA29C4 /* BWCircularSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A120281B9EE31500DA29C4 /* BWCircularSlider.swift */; };
 		71A1202B1B9EE67300DA29C4 /* BWCircularSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A1202A1B9EE67300DA29C4 /* BWCircularSliderView.swift */; };
+		71AEDD751BA95662007479C9 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AEDD741BA95662007479C9 /* Util.swift */; };
+		71AEDD771BA956BF007479C9 /* Week.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AEDD761BA956BF007479C9 /* Week.swift */; };
 		71B6AFEF1B9436BE00F6DEC7 /* WorkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B6AFEE1B9436BE00F6DEC7 /* WorkTableViewController.swift */; };
 		71BECFF21B97F0FE00C3D31D /* NSDateISO8601.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BECFF11B97F0FE00C3D31D /* NSDateISO8601.swift */; };
 		71BECFF41B998E8600C3D31D /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BECFF31B998E8600C3D31D /* SettingTableViewController.swift */; };
@@ -54,6 +56,8 @@
 		71A120211B9D2EBF00DA29C4 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "Pods/../build/Debug-iphoneos/Alamofire.framework"; sourceTree = "<group>"; };
 		71A120281B9EE31500DA29C4 /* BWCircularSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BWCircularSlider.swift; sourceTree = "<group>"; };
 		71A1202A1B9EE67300DA29C4 /* BWCircularSliderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BWCircularSliderView.swift; sourceTree = "<group>"; };
+		71AEDD741BA95662007479C9 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		71AEDD761BA956BF007479C9 /* Week.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Week.swift; sourceTree = "<group>"; };
 		71B6AFEE1B9436BE00F6DEC7 /* WorkTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkTableViewController.swift; sourceTree = "<group>"; };
 		71BECFF11B97F0FE00C3D31D /* NSDateISO8601.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateISO8601.swift; sourceTree = "<group>"; };
 		71BECFF31B998E8600C3D31D /* SettingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +109,8 @@
 			children = (
 				718B12D61B942C9F00AC32C3 /* Main.storyboard */,
 				718B12D21B942C9F00AC32C3 /* AppDelegate.swift */,
+				71AEDD741BA95662007479C9 /* Util.swift */,
+				71AEDD761BA956BF007479C9 /* Week.swift */,
 				718B12D41B942C9F00AC32C3 /* PunchViewController.swift */,
 				71B6AFEE1B9436BE00F6DEC7 /* WorkTableViewController.swift */,
 				716131B61BA27B1B009F34C3 /* Work.swift */,
@@ -315,10 +321,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71AEDD751BA95662007479C9 /* Util.swift in Sources */,
 				71A120201B9ADEF800DA29C4 /* HelpViewController.swift in Sources */,
 				71A1202B1B9EE67300DA29C4 /* BWCircularSliderView.swift in Sources */,
 				716131B71BA27B1B009F34C3 /* Work.swift in Sources */,
 				71BECFF41B998E8600C3D31D /* SettingTableViewController.swift in Sources */,
+				71AEDD771BA956BF007479C9 /* Week.swift in Sources */,
 				71A120291B9EE31500DA29C4 /* BWCircularSlider.swift in Sources */,
 				718B12D51B942C9F00AC32C3 /* PunchViewController.swift in Sources */,
 				71BECFF21B97F0FE00C3D31D /* NSDateISO8601.swift in Sources */,
