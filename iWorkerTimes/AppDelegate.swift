@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,6 +16,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Basic認証情報
+        let user = "maccha"
+        let password = "maccha"
+        
+        let plainString = "\(user):\(password)" as NSString
+        let plainData = plainString.dataUsingEncoding(NSUTF8StringEncoding)
+        let base64String = plainData?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
+        
+        Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders = ["Authorization": "Basic " + base64String!]
+        
         return true
     }
 
