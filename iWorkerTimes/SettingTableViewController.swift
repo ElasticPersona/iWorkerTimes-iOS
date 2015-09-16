@@ -8,9 +8,9 @@
 
 import UIKit
 
-class SettingTableViewController: UITableViewController {
+class SettingTableViewController: UITableViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
-    private let mySections: NSArray = ["登録情報"]
+    private let settingSections: NSArray = ["登録情報", "背景設定"]
     
     private var nameTextField: UITextField!
     
@@ -39,14 +39,14 @@ class SettingTableViewController: UITableViewController {
     セクションの数を返す.
     */
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return mySections.count
+        return settingSections.count
     }
     
     /*
     セクションのタイトルを返す.
     */
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return mySections[section] as? String
+        return settingSections[section] as? String
     }
     
     /*
@@ -95,6 +95,7 @@ class SettingTableViewController: UITableViewController {
         
         return cell
     }
+    
     
     // UINavigationControllerで戻った際に呼び出される
     override func viewDidDisappear(animated: Bool) {
@@ -186,5 +187,14 @@ class SettingTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+        if info[UIImagePickerControllerOriginalImage] != nil {
+            let image:UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        }
+        //allowsEditingがtrueの場合 UIImagePickerControllerEditedImage
+        //閉じる処理
+        picker.dismissViewControllerAnimated(true, completion: nil);
+    }
 
 }

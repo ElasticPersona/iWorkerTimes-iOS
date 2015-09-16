@@ -23,9 +23,9 @@ import SwiftyJSON
     var nowStatus = 0
     
     // 打刻ボタンでリクエストを送るURL
-    let urlPostString = "http://52.68.68.148:3000/work"
+    let urlPostString = "http://52.69.128.126:3000/work/add"
     // 今日の打刻状況を取得するURL
-    let urlTodayString = "http://52.68.68.148:3000/work/today"
+    let urlTodayString = "http://52.69.128.126:3000/work/today"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -336,7 +336,7 @@ import SwiftyJSON
         
         let alert = UIAlertView()
         
-        if self.nowStatus != punchStatus["fin"]! {
+        if self.nowStatus != self.punchStatus["fin"]! {
             
             // ユーザ名を付加させてリクエストを送る
             let defaults = NSUserDefaults.standardUserDefaults()
@@ -371,7 +371,6 @@ import SwiftyJSON
         
         loadView()
         viewDidLoad()
-        
     }
     
     // 今日の打刻状況を取得

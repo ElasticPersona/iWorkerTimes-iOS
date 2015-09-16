@@ -20,7 +20,7 @@ class WorkTableViewController: UITableViewController {
     
     // 取得するAPI
     //let urlString = "http://api.openweathermap.org/data/2.5/forecast?units=metric&q=Tokyo"
-    let urlString = "http://52.68.68.148:3000/work"
+    let urlString = "http://52.69.128.126:3000/work"
     
     // セルの中身
     var works = [Work]()
