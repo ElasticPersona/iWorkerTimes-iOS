@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class SettingTableViewController: UITableViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
@@ -53,7 +54,7 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
     Cellが選択された際に呼び出される.
     */
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+        self.imageSelectController()
     }
     
     /*
@@ -91,6 +92,11 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
             // self.view.addSubview(nameTextField)
             cell.accessoryView = nameTextField
             cell.textLabel?.text = "名前"
+            
+        } else if indexPath.section == 1 {
+            
+            cell.textLabel?.text = "背景を設定する"
+            
         }
         
         return cell
@@ -188,13 +194,66 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
     }
     */
     
+    
+    /*
+     * 背景選択
+     */
+    func imageSelectController() {
+        
+        var actionSheet = UIAlertController(title:"Image", message: "Select the image", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        var actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {action in
+            //nothing
+        })
+        var actionNormal1 = UIAlertAction(title: "From Album", style: UIAlertActionStyle.Default, handler: {action in
+            let imagePickerVc = UIImagePickerController()
+            imagePickerVc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            imagePickerVc.delegate = self
+            self.presentViewController(imagePickerVc, animated: true, completion: nil)
+        })
+        var actionNormal2 = UIAlertAction(title: "From Camera", style: UIAlertActionStyle.Default, handler: {action in
+            let imagePickerVc = UIImagePickerController()
+            imagePickerVc.sourceType = UIImagePickerControllerSourceType.Camera
+            imagePickerVc.delegate = self
+            self.presentViewController(imagePickerVc, animated: true, completion: nil)
+        })
+        actionSheet.addAction(actionCancel)
+        actionSheet.addAction(actionNormal1)
+        actionSheet.addAction(actionNormal2)
+        
+        self.presentViewController(actionSheet, animated: true, completion: nil)
+    }
+    
+    /*
+     * 画像選択後に呼ばれるメソッド
+     */
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        if info[UIImagePickerControllerOriginalImage] != nil {
-            let image:UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        self.dismissViewControllerAnimated(true, completion: nil)
+
+        // from camaera
+        if (info.indexForKey(UIImagePickerControllerOriginalImage) != nil) {
+            let tookImage: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+            var imagePath = NSHomeDirectory()
+            imagePath = imagePath.stringByAppendingPathComponent("Documents/top.png")
+            var imageData: NSData = UIImagePNGRepresentation(tookImage)
+            let isSuccess = imageData.writeToFile(imagePath, atomically: true)
+            if isSuccess {
+                let fileUrl: NSURL = NSURL(fileURLWithPath: imagePath)!
+                println(fileUrl)
+                //uploadToS3(fileUrl)
+            }
+            return
         }
-        //allowsEditingがtrueの場合 UIImagePickerControllerEditedImage
-        //閉じる処理
-        picker.dismissViewControllerAnimated(true, completion: nil);
+        
+        // from album
+        var pickedURL:NSURL = info[UIImagePickerControllerReferenceURL] as! NSURL
+        let fetchResult: PHFetchResult = PHAsset.fetchAssetsWithALAssetURLs([pickedURL], options: nil)
+        let asset: PHAsset = fetchResult.firstObject as! PHAsset
+        
+        PHImageManager.defaultManager().requestImageDataForAsset(asset, options: nil, resultHandler: {(imageData: NSData!, dataUTI: String!, orientation: UIImageOrientation, info: [NSObject : AnyObject]!) in
+            let fileUrl: NSURL = info["PHImageFileURLKey"] as! NSURL
+            println(fileUrl)
+            //self.uploadToS3(fileUrl)
+        })
     }
 
 }

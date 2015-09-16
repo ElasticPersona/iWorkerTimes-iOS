@@ -10,6 +10,7 @@ import UIKit
 import Foundation
 import Alamofire
 import SwiftyJSON
+import Photos
 
 @IBDesignable class PunchViewController: UIViewController, UITextFieldDelegate {
     
@@ -30,6 +31,20 @@ import SwiftyJSON
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        // デバイスのDocumentsディレクトリのパスを取得
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+        // 画像ファイルパス:imageNameは表示したい画像ファイル名
+        let imagePath = documentsPath.stringByAppendingPathComponent("top.png")
+        // 背景に画像を設定する.
+        let backgroundImage: UIImage? = UIImage(contentsOfFile: imagePath)
+        // 画像存在チェック
+        if let validImage = backgroundImage {
+            let backgroundImageView: UIImageView = UIImageView()
+            backgroundImageView.image = backgroundImage
+            backgroundImageView.frame = CGRectMake(0, 0, backgroundImage!.size.width, backgroundImage!.size.height)
+            self.view.addSubview(backgroundImageView)
+        }
         
         // CADisplayLink生成
         self.displayLinkCreate()
