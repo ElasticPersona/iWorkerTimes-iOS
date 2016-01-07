@@ -11,17 +11,14 @@ import Foundation
 class Util {
     // 次の水曜12時を返す
     class func nextFireDate() -> NSDate {
-        var date = NSDate()
-        var calender = NSCalendar.currentCalendar()
-        var components = calender.components(
-            .CalendarUnitYear |
-                .CalendarUnitMonth |
-                .CalendarUnitDay |
-                .CalendarUnitWeekday, fromDate: date)
-        var weekday = components.weekday  // 1が日曜
-        var hour = components.hour
+        let date = NSDate()
+        let calender = NSCalendar.currentCalendar()
+        let components = calender.components(
+            [.Year, .Month, .Day, .Weekday], fromDate: date)
+        let weekday = components.weekday  // 1が日曜
+        let hour = components.hour
         
-        var fireWeekday = Week.Wednesday.rawValue
+        let fireWeekday = Week.Wednesday.rawValue
         var interval: NSTimeInterval
         if (weekday >= fireWeekday && hour >= 12) {
             interval = Double(60 * 60 * 24 * ((7 + fireWeekday) - weekday))
@@ -29,12 +26,9 @@ class Util {
             interval = Double(60 * 60 * 24 * (fireWeekday - weekday))
         }
         
-        var nextDate = date.dateByAddingTimeInterval(interval)
-        var fireDateComponents = calender.components(
-            .CalendarUnitYear |
-                .CalendarUnitMonth |
-                .CalendarUnitDay |
-                .CalendarUnitWeekday, fromDate: nextDate)
+        let nextDate = date.dateByAddingTimeInterval(interval)
+        let fireDateComponents = calender.components(
+            [.Year, .Month, .Day, .Weekday], fromDate: nextDate)
         fireDateComponents.hour = 12
         fireDateComponents.minute = 0
         fireDateComponents.second = 0

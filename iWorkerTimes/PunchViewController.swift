@@ -24,18 +24,18 @@ import Photos
     var nowStatus = 0
     
     // 打刻ボタンでリクエストを送るURL
-    let urlPostString = "http://52.69.128.126:3000/work/add"
+    let urlPostString = "https://52.69.128.126:3000/work/add"
     // 今日の打刻状況を取得するURL
-    let urlTodayString = "http://52.69.128.126:3000/work/today"
+    let urlTodayString = "https://52.69.128.126:3000/work/today"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         // デバイスのDocumentsディレクトリのパスを取得
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
         // 画像ファイルパス:imageNameは表示したい画像ファイル名
-        let imagePath = documentsPath.stringByAppendingPathComponent("top.png")
+        let imagePath = ("top.png" as NSString).stringByAppendingPathComponent(documentsPath as String)
         // 背景に画像を設定する.
         let backgroundImage: UIImage? = UIImage(contentsOfFile: imagePath)
         // 画像存在チェック
@@ -47,7 +47,7 @@ import Photos
         }
         
         // CADisplayLink生成
-        self.displayLinkCreate()
+        // self.displayLinkCreate()
         
         // 現在時刻表示生成
         var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("nowTimeViewCreate"), userInfo: nil, repeats: true);
@@ -67,6 +67,42 @@ import Photos
         self.view.addGestureRecognizer(pageSwipe)
     }
     
+    
+    //タッチした箇所によって処理を分ける
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        
+        print(touches)
+        //タッチした位置の座標を取得
+        for touch: AnyObject in touches {
+            let point = touch.locationInView(self.view)
+            print(point)
+            
+            //座標獲得
+            let pointXY = (point.x,point.y)
+            print(pointXY)
+            
+            /*
+            座標獲得、分けて書く場合
+            let pointX = point.x
+            let pointY = point.y
+            
+            //条件分岐
+            switch pointXY {
+            case (0.0...105.0, 0.0...70.0):
+            println("\(point) だよ、1ばんめ")
+            case (105.0...213.0, 70.0...141.0):
+            println("\(point) だよ、5ばんめ")
+            default:
+            println("\(point) はみだしてる")
+            }
+            */
+            
+            
+        }
+        
+    }
+
+    
     // 備考欄の生成
     func inputCommentCreate() {
         
@@ -84,10 +120,11 @@ import Photos
         punchCommentField.borderStyle = UITextBorderStyle.RoundedRect
         
         // UITextFieldの表示する位置を設定する.
-        punchCommentField.layer.position = CGPoint(x:self.view.bounds.width/2, y:self.view.bounds.height/1.05);
+        punchCommentField.layer.position = CGPoint(x:self.view.bounds.width/2, y:self.view.bounds.height/1.25);
         
         // Viewに追加する.
         self.view.addSubview(punchCommentField)
+        // self.view.bringSubviewToFront(self.punchCommentField)
         
     }
     
@@ -95,14 +132,14 @@ import Photos
     UITextFieldが編集された直後に呼ばれるデリゲートメソッド.
     */
     func textFieldDidBeginEditing(textField: UITextField){
-        self.punchComment = textField.text
+        self.punchComment = textField.text!
     }
     
     /*
     UITextFieldが編集終了する直前に呼ばれるデリゲートメソッド.
     */
     func textFieldShouldEndEditing(textField: UITextField) -> Bool {
-        self.punchComment = textField.text
+        self.punchComment = textField.text!
         
         return true
     }
@@ -111,7 +148,7 @@ import Photos
     改行ボタンが押された際に呼ばれるデリゲートメソッド.
     */
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        self.punchComment = textField.text
+        self.punchComment = textField.text!
         
         return true
     }
@@ -167,13 +204,7 @@ import Photos
         let myCalendar: NSCalendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         
         //取得するコンポーネントを決める.
-        let myComponetns = myCalendar.components(NSCalendarUnit.CalendarUnitYear   |
-            NSCalendarUnit.CalendarUnitMonth  |
-            NSCalendarUnit.CalendarUnitDay    |
-            NSCalendarUnit.CalendarUnitHour   |
-            NSCalendarUnit.CalendarUnitMinute |
-            NSCalendarUnit.CalendarUnitSecond |
-            NSCalendarUnit.CalendarUnitWeekday,
+        let myComponetns = myCalendar.components([NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day, NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Second, NSCalendarUnit.Weekday],
             fromDate: myDate)
         
         let weekdayStrings: Array = ["nil","日","月","火","水","木","金","土","日"]
@@ -189,7 +220,7 @@ import Photos
         */
         
         //現在時間表示用のラベルを生成.
-        var timeLabel: UILabel = UILabel()
+        let timeLabel: UILabel = UILabel()
         timeLabel.font = UIFont(name: "HiraKakuInterface-W1", size:UIFont.labelFontSize())
         
         var myStr: String = "\(myComponetns.year)年"
@@ -201,7 +232,7 @@ import Photos
         myStr += "\(myComponetns.second)秒"
         
         timeLabel.text = myStr
-        timeLabel.frame = CGRect(x: 0, y: self.view.bounds.height/2, width: self.view.bounds.width, height: 20)
+        timeLabel.frame = CGRect(x: 0, y: self.view.bounds.height/5.2, width: self.view.bounds.width, height: 20)
         timeLabel.textAlignment = NSTextAlignment.Center
         
         self.view.viewWithTag(1)?.removeFromSuperview()
@@ -228,7 +259,7 @@ import Photos
         maxImage = maxImage!.resizableImageWithCapInsets(maxInsets)
         
         //スライダーインスタンス生成
-        customSlider = UISlider(frame: CGRectMake(0, self.view.frame.height/1.3, self.view.frame.width, 100))
+        customSlider = UISlider(frame: CGRectMake(0, self.view.frame.height/1.2, self.view.frame.width, 100))
         
         //枠画像をスライダーへ登録（登録した時点で、スライダーのviewのwidthに合うように枠画像が伸張する模様）
         customSlider.setMinimumTrackImage(minImage, forState: .Normal)
@@ -252,7 +283,7 @@ import Photos
         customSlider.addTarget(self, action: "punchSliderStart:", forControlEvents: UIControlEvents.TouchDown)
         
         //指を離した時のアクション
-        customSlider.addTarget(self, action: "punchSliderStop:", forControlEvents: (UIControlEvents.TouchUpInside | UIControlEvents.TouchUpOutside | UIControlEvents.TouchCancel))
+        customSlider.addTarget(self, action: "punchSliderStop:", forControlEvents: ([UIControlEvents.TouchUpInside, UIControlEvents.TouchUpOutside, UIControlEvents.TouchCancel]))
         
         
         //カスタムスライダーをViewへ登録
@@ -261,7 +292,7 @@ import Photos
     
     func punchSlider(slider: UISlider) {
         // Do something with the value...
-        println("Value changed \(slider.value)")
+        print("Value changed \(slider.value)", terminator: "")
         
         //スライダーを右端まで動かした場合打刻する
         if (slider.value == 100.0) {
@@ -270,18 +301,17 @@ import Photos
     }
     
     func punchSliderStart(slider: UISlider) {
-        println("このまま打刻")
+        print("このまま打刻", terminator: "")
     }
     
     func punchSliderStop(slider: UISlider) {
-        println("離したね")
+        print("離したね", terminator: "")
         self.customSlider.value = 3.0
     }
     
     /*
-    カスタムスライダー
+    360度カスタムスライダー
     */
-    /*
     @IBInspectable var startColor:UIColor = UIColor.redColor()
     @IBInspectable var endColor:UIColor = UIColor.blueColor()
     
@@ -312,9 +342,8 @@ import Photos
     
     func valueChanged(slider:BWCircularSlider){
         // Do something with the value...
-        println("Value changed \(slider.angle)")
+        print("Value changed \(slider.angle)")
     }
-    */
     
     /*
     スワイプイベント
@@ -322,7 +351,7 @@ import Photos
     */
     internal func swipeGesture(sender: UISwipeGestureRecognizer){
         let touches = sender.numberOfTouches()
-        println("swipeGesture:")
+        print("swipeGesture:", terminator: "")
         //swipeLabel.text = "\(touches)"
         performSegueWithIdentifier("WorkTableViewSegue",sender: nil)
     }
@@ -363,8 +392,7 @@ import Photos
             ]
         
             request(.POST, urlPostString, parameters: params, encoding: .JSON)
-                .responseJSON {
-                    (request, response, data, error) -> Void in
+                .responseJSON { (request, response, data) -> Void in
                 
             }
             
@@ -375,7 +403,7 @@ import Photos
             
         } else {
             
-            alert.title = "本日は打刻済みです。お疲れ様でした。"
+            alert.title = "本日は打刻済みです。\nお疲れ様でした。"
             alert.message = NSDate.dateToString(NSDate(), nsFormat: "yyyy年MM月dd日 HH時mm分")
             self.punchComment = ""
             
@@ -394,40 +422,53 @@ import Photos
         // ユーザ名を付加させてリクエストを送る
         let defaults = NSUserDefaults.standardUserDefaults()
         let userName = defaults.stringForKey("userName")
-        let params = [
-            "userName" : userName!
-        ]
         
-        request(.POST, urlTodayString, parameters: params, encoding: .JSON)
-            .responseJSON {
-                (_, _, resJson, error) -> Void in
-                if (error == nil) {
-                    let results = JSON(resJson!)
-                    let data = results["results"][0]
-                    var workIn = data["workIn"]
-                    var workOut = data["workOut"]
-                    
-                    //今日の打刻チェック
-                    if (workIn == nil && workOut == nil) {
-                        //出社打刻（イメージ変更）
-                        self.nowStatus = self.punchStatus["in"]!
-                        var punchInImage = UIImage(named: "punchInSlider.jpg")
-                        self.customSlider.setThumbImage(punchInImage, forState: .Normal)
-                        
-                    } else if (workIn != nil && workOut == nil) {
-                        //退勤打刻（イメージ変更）
-                        self.nowStatus = self.punchStatus["out"]!
-                        var punchOutImage = UIImage(named: "punchOutSlider.jpg")
-                        self.customSlider.setThumbImage(punchOutImage, forState: .Normal)
-                        
-                    } else {
-                        //打刻ボタン操作不可（イメージ変更）
-                        self.nowStatus = self.punchStatus["fin"]!
-                        var punchFinImage = UIImage(named: "punchFinSlider.jpg")
-                        self.customSlider.setThumbImage(punchFinImage, forState: .Normal)
+        if userName != nil {
+        
+            let params = [
+                "userName" : userName!
+            ]
+        
+            request(.POST, urlTodayString, parameters: params, encoding: .JSON)
+                .responseJSON { (_, _, result) -> Void in
+                    switch result {
+                        case .Success(let data):
+                            let results = JSON(data)
+                            let data = results["results"][0]
+                            let workIn = data["workIn"]
+                            let workOut = data["workOut"]
+                            
+                            //今日の打刻チェック
+                            if (workIn == nil && workOut == nil) {
+                                //出社打刻（イメージ変更）
+                                self.nowStatus = self.punchStatus["in"]!
+                                let punchInImage = UIImage(named: "punchInSlider.jpg")
+                                self.customSlider.setThumbImage(punchInImage, forState: .Normal)
+                                
+                            } else if (workIn != nil && workOut == nil) {
+                                //退勤打刻（イメージ変更）
+                                self.nowStatus = self.punchStatus["out"]!
+                                let punchOutImage = UIImage(named: "punchOutSlider.jpg")
+                                self.customSlider.setThumbImage(punchOutImage, forState: .Normal)
+                                
+                            } else {
+                                //打刻ボタン操作不可（イメージ変更）
+                                self.nowStatus = self.punchStatus["fin"]!
+                                let punchFinImage = UIImage(named: "punchFinSlider.jpg")
+                                self.customSlider.setThumbImage(punchFinImage, forState: .Normal)
+                        }
+                            
+                        case .Failure(_, let error):
+                            print("Request failed with error: \(error)")
                     }
                     
-                }
+                    
+                    
+            }
+            
+        } else {
+            let punchInImage = UIImage(named: "punchInSlider.jpg")
+            self.customSlider.setThumbImage(punchInImage, forState: .Normal)
         }
         
     }

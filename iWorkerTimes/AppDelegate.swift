@@ -23,16 +23,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let plainString = "\(user):\(password)" as NSString
         let plainData = plainString.dataUsingEncoding(NSUTF8StringEncoding)
-        let base64String = plainData?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
+        let base64String = plainData?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions())
         
         Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders = ["Authorization": "Basic " + base64String!]
         
         // ユーザのpush通知許可をもらうための設定
         application.registerUserNotificationSettings(
             UIUserNotificationSettings(forTypes:
-                UIUserNotificationType.Sound
-              | UIUserNotificationType.Badge
-              | UIUserNotificationType.Alert, categories: nil
+                [UIUserNotificationType.Sound, UIUserNotificationType.Badge, UIUserNotificationType.Alert], categories: nil
             )
         )
         
@@ -59,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 登録済みのスケジュールをすべてリセット
         application.cancelAllLocalNotifications()
         
-        var notification = UILocalNotification()
+        let notification = UILocalNotification()
         notification.alertAction = "アプリに戻る"
         // push通知メッセージ
         notification.alertBody = "定時になりました"

@@ -12,7 +12,7 @@ struct Config {
     
     static let TB_SLIDER_SIZE:CGFloat = UIScreen.mainScreen().bounds.size.width
     static let TB_SAFEAREA_PADDING:CGFloat = 60.0
-    static let TB_LINE_WIDTH:CGFloat = 40.0
+    static let TB_LINE_WIDTH:CGFloat = 60.0
     static let TB_FONTSIZE:CGFloat = 40.0
     
 }
@@ -75,7 +75,7 @@ class BWCircularSlider: UIControl {
         
         textField = UITextField(frame: textFieldRect)
         textField?.backgroundColor = UIColor.clearColor()
-        textField?.textColor = UIColor(white: 1.0, alpha: 0.8)
+        textField?.textColor = UIColor(white: 0.0, alpha: 0.8)
         textField?.textAlignment = .Center
         textField?.font = font
         textField?.text = "\(self.angle)"
@@ -83,19 +83,18 @@ class BWCircularSlider: UIControl {
         addSubview(textField!)
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent) -> Bool {
+    override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         super.beginTrackingWithTouch(touch, withEvent: event)
         
         return true
     }
     
     
-    override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent) -> Bool {
+    override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         super.continueTrackingWithTouch(touch, withEvent: event)
         
         let lastPoint = touch.locationInView(self)
@@ -107,7 +106,7 @@ class BWCircularSlider: UIControl {
         return true
     }
     
-    override func endTrackingWithTouch(touch: UITouch, withEvent event: UIEvent) {
+    override func endTrackingWithTouch(touch: UITouch?, withEvent event: UIEvent?) {
         super.endTrackingWithTouch(touch, withEvent: event)
     }
     
@@ -127,9 +126,9 @@ class BWCircularSlider: UIControl {
         UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0).set()
         
         CGContextSetLineWidth(ctx, 72)
-        CGContextSetLineCap(ctx, kCGLineCapButt)
+        CGContextSetLineCap(ctx, CGLineCap.Butt)
         
-        CGContextDrawPath(ctx, kCGPathStroke)
+        CGContextDrawPath(ctx, CGPathDrawingMode.Stroke)
         
         
         /** Draw the circle **/
@@ -145,10 +144,10 @@ class BWCircularSlider: UIControl {
         
         //define the path
         CGContextSetLineWidth(imageCtx, Config.TB_LINE_WIDTH)
-        CGContextDrawPath(imageCtx, kCGPathStroke)
+        CGContextDrawPath(imageCtx, CGPathDrawingMode.Stroke)
         
         //save the context content into the image mask
-        var mask:CGImageRef = CGBitmapContextCreateImage(UIGraphicsGetCurrentContext());
+        let mask:CGImageRef = CGBitmapContextCreateImage(UIGraphicsGetCurrentContext())!;
         UIGraphicsEndImageContext();
         
         /** Clip Context to the mask **/
@@ -177,11 +176,11 @@ class BWCircularSlider: UIControl {
         let endPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect))
         
         // Draw the gradient
-        CGContextDrawLinearGradient(ctx, gradient, startPoint, endPoint, 0);
+        CGContextDrawLinearGradient(ctx, gradient, startPoint, endPoint, .DrawsAfterEndLocation)
         CGContextRestoreGState(ctx);
         
         /* Draw the handle */
-        drawTheHandle(ctx)
+        drawTheHandle(ctx!)
         
     }
     
@@ -197,10 +196,11 @@ class BWCircularSlider: UIControl {
         CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 3, UIColor.blackColor().CGColor);
         
         //Get the handle position
-        var handleCenter = pointFromAngle(angle)
+        let handleCenter = pointFromAngle(angle)
         
         //Draw It!
-        UIColor(white:1.0, alpha:0.7).set();
+        UIColor(white:1.0, alpha:0.5).set();
+        
         CGContextFillEllipseInRect(ctx, CGRectMake(handleCenter.x, handleCenter.y, Config.TB_LINE_WIDTH, Config.TB_LINE_WIDTH));
         
         CGContextRestoreGState(ctx);
@@ -225,13 +225,13 @@ class BWCircularSlider: UIControl {
         textField!.text = "\(angle)"
         
         if (angle >= 0 && angle <= 119) {
-            println("まだまだ")
+            print("まだまだ", terminator: "")
         }else if(angle >= 120 && angle <= 239) {
-            println("もーすぐ")
+            print("もーすぐ", terminator: "")
         }else if(angle >= 240 && angle <= 359) {
-            println("打刻するよ")
+            print("打刻するよ", terminator: "")
         }else if(angle == 360) {
-            println("打刻しました")
+            print("打刻しました", terminator: "")
         }
         
         //Redraw

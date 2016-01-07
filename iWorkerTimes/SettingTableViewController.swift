@@ -11,7 +11,7 @@ import Photos
 
 class SettingTableViewController: UITableViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
-    private let settingSections: NSArray = ["登録情報", "背景設定"]
+    private let settingSections: NSArray = ["登録情報", "背景設定", "出勤打刻通知タイミング", "退勤打刻通知タイミング"]
     
     private var nameTextField: UITextField!
     
@@ -70,7 +70,7 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
     */
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("settingTableCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("settingTableCell", forIndexPath: indexPath) 
         
         if indexPath.section == 0 {
             
@@ -97,6 +97,14 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
             
             cell.textLabel?.text = "背景を設定する"
             
+        } else if indexPath.section == 2 {
+            
+            cell.textLabel?.text = "9:00"
+            
+        } else if indexPath.section == 3 {
+            
+            cell.textLabel?.text = "17:30"
+            
         }
         
         return cell
@@ -112,12 +120,12 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
         // NSDefaultsに保存する
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(userName , forKey: "userName")
-        println(defaults.objectForKey("userName"))
+        print(defaults.objectForKey("userName"), terminator: "")
         
         // すぐにデータを永続化させる
         let success = defaults.synchronize()
         if success {
-            println("データを同期しました")
+            print("データを同期しました", terminator: "")
         }
         
     }
@@ -200,17 +208,17 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
      */
     func imageSelectController() {
         
-        var actionSheet = UIAlertController(title:"Image", message: "Select the image", preferredStyle: UIAlertControllerStyle.ActionSheet)
-        var actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {action in
+        let actionSheet = UIAlertController(title:"Image", message: "Select the image", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {action in
             //nothing
         })
-        var actionNormal1 = UIAlertAction(title: "From Album", style: UIAlertActionStyle.Default, handler: {action in
+        let actionNormal1 = UIAlertAction(title: "From Album", style: UIAlertActionStyle.Default, handler: {action in
             let imagePickerVc = UIImagePickerController()
             imagePickerVc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
             imagePickerVc.delegate = self
             self.presentViewController(imagePickerVc, animated: true, completion: nil)
         })
-        var actionNormal2 = UIAlertAction(title: "From Camera", style: UIAlertActionStyle.Default, handler: {action in
+        let actionNormal2 = UIAlertAction(title: "From Camera", style: UIAlertActionStyle.Default, handler: {action in
             let imagePickerVc = UIImagePickerController()
             imagePickerVc.sourceType = UIImagePickerControllerSourceType.Camera
             imagePickerVc.delegate = self
@@ -226,19 +234,22 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
     /*
      * 画像選択後に呼ばれるメソッド
      */
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         self.dismissViewControllerAnimated(true, completion: nil)
 
         // from camaera
         if (info.indexForKey(UIImagePickerControllerOriginalImage) != nil) {
             let tookImage: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-            var imagePath = NSHomeDirectory()
-            imagePath = imagePath.stringByAppendingPathComponent("Documents/top.png")
-            var imageData: NSData = UIImagePNGRepresentation(tookImage)
-            let isSuccess = imageData.writeToFile(imagePath, atomically: true)
+            // デバイスのDocumentsディレクトリのパスを取得
+            var documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+            documentsPath = (documentsPath as NSString).stringByAppendingPathComponent("top.png")
+            //var imagePath = NSHomeDirectory()
+            //imagePath = (imagePath as NSString).stringByAppendingPathComponent("Documents/top.png")
+            var imageData: NSData = UIImagePNGRepresentation(tookImage)!
+            let isSuccess = imageData.writeToFile(documentsPath, atomically: true)
             if isSuccess {
-                let fileUrl: NSURL = NSURL(fileURLWithPath: imagePath)!
-                println(fileUrl)
+                let fileUrl: NSURL = NSURL(fileURLWithPath: documentsPath)
+                print(fileUrl, terminator: "")
                 //uploadToS3(fileUrl)
             }
             return
@@ -249,9 +260,9 @@ class SettingTableViewController: UITableViewController,UIImagePickerControllerD
         let fetchResult: PHFetchResult = PHAsset.fetchAssetsWithALAssetURLs([pickedURL], options: nil)
         let asset: PHAsset = fetchResult.firstObject as! PHAsset
         
-        PHImageManager.defaultManager().requestImageDataForAsset(asset, options: nil, resultHandler: {(imageData: NSData!, dataUTI: String!, orientation: UIImageOrientation, info: [NSObject : AnyObject]!) in
-            let fileUrl: NSURL = info["PHImageFileURLKey"] as! NSURL
-            println(fileUrl)
+        PHImageManager.defaultManager().requestImageDataForAsset(asset, options: nil, resultHandler: {(imageData: NSData?, dataUTI: String?, orientation: UIImageOrientation, info: [NSObject : AnyObject]?) in
+            let fileUrl: NSURL = info as! NSURL
+            print(fileUrl, terminator: "")
             //self.uploadToS3(fileUrl)
         })
     }

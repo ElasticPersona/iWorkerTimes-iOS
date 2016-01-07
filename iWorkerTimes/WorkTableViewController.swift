@@ -20,7 +20,7 @@ class WorkTableViewController: UITableViewController {
     
     // 取得するAPI
     //let urlString = "http://api.openweathermap.org/data/2.5/forecast?units=metric&q=Tokyo"
-    let urlString = "http://52.69.128.126:3000/work"
+    let urlString = "https://52.69.128.126:3000/work"
     
     // セルの中身
     var works = [Work]()
@@ -47,7 +47,7 @@ class WorkTableViewController: UITableViewController {
     
     // プルダウンでリロード機能を付加
     func addRefreshControl() {
-        var refresh = UIRefreshControl()
+        let refresh = UIRefreshControl()
         // ロード時に表示される文字を設定
         refresh.attributedTitle = NSAttributedString(string: "Now Loading...")
         // プルダウン時に呼び出されるメソッドを設定
@@ -66,7 +66,7 @@ class WorkTableViewController: UITableViewController {
         // table情報を更新
         self.tableView.reloadData()
         self.index++
-        println("refresh: \(self.index)")
+        print("refresh: \(self.index)", terminator: "")
     }
     
     
@@ -83,20 +83,24 @@ class WorkTableViewController: UITableViewController {
         ]
         
         request(.POST, urlString, parameters: params, encoding: .JSON)
-            .responseJSON {
-                (_, _, resJson, error) -> Void in
-                if let workParamArray = resJson!["results"] as? Array<Dictionary<String,AnyObject>> {
-                    for workParam in workParamArray {
-                        let work = Work()
+            .responseJSON { (_, _, result) -> Void in
+                switch result {
+                    case .Success(let data):
+                        let workParamArray = data["results"] as? Array<Dictionary<String,AnyObject>>
+                        for workParam in workParamArray! {
+                            let work = Work()
                             work.userName        = workParam["userName"] as? String
                             work.workIn          = workParam["workIn"] as? String
                             work.workOut         = workParam["workOut"] as? String
                             work.workInComment   = workParam["workInComment"] as? String
                             work.workOutComment  = workParam["workOutComment"] as? String
-
-                        self.works.append(work)
-                    }
-                    self.tableView.reloadData()
+                            
+                            self.works.append(work)
+                        }
+                        self.tableView.reloadData()
+                    
+                    case .Failure(_, let error):
+                        print("Request failed with error: \(error)")
                 }
                 // ロードが完了したので、falseに
                 self.isInLoad = false
@@ -131,7 +135,7 @@ class WorkTableViewController: UITableViewController {
     // セルの中身を設定
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("workTableCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("workTableCell", forIndexPath: indexPath) 
         // セルの中身を設定
         let work = works[indexPath.row]
         

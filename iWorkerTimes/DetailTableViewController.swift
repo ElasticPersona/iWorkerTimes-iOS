@@ -70,7 +70,7 @@ class DetailTableViewController: UITableViewController {
     */
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("datailTableCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("datailTableCell", forIndexPath: indexPath) 
         
         var workInString   = detailWorks.workIn
         var workOutString  = detailWorks.workOut
@@ -109,7 +109,7 @@ class DetailTableViewController: UITableViewController {
     
     // プルダウンでリロード機能を付加
     func addRefreshControl() {
-        var refresh = UIRefreshControl()
+        let refresh = UIRefreshControl()
         // ロード時に表示される文字を設定
         //refresh.attributedTitle = NSAttributedString(string: "Now Loading...")
         // プルダウン時に呼び出されるメソッドを設定
